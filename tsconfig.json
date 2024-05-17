@@ -13,7 +13,7 @@
     "strict": true,
     "forceConsistentCasingInFileNames": true,
     "noFallthroughCasesInSwitch": true,
-    "module": "esnext",
+    "module": "ESNext",
     "moduleResolution": "node",
     "resolveJsonModule": true,
     "isolatedModules": true,
@@ -22,5 +22,5 @@
   },
   "include": [
     "src"
-  ]
+, "../3d_web_test/src/Char1 copy.jsx", "../3d_web_test/src/ThreeComponent-rapier"  ]
 }

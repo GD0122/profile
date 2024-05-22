@@ -379,7 +379,7 @@ const selectProject = async(i:number)=>{
                 </div>
              
                 <div style={{width:'65%',}}>
-                <iframe title="projectBox" src={`http://localhost:3000/project/${projectI}`} height={'100%'} width={'100%'}
+                <iframe title="projectBox" src={`https://profiletest.netlify.app/project/${projectI}`} height={'100%'} width={'100%'}
                  frameBorder={0}
                 />
                 </div>

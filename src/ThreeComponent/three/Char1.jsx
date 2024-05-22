@@ -75,7 +75,7 @@ export function Char1(props) {
 
   
  
-    // Jika kamera akan bertabrakan dengan wall, kembalikan posisi kamera ke posisi sebelumnya
+   
   
    
     

@@ -14,4 +14,8 @@ export const Images = [
         name:'image4',
         path:'/galeri/4.png'
     },
+    {
+        name:'image5',
+        path:'/galeri/image.png'
+    }
 ]

@@ -1,3 +1,168 @@
 .info:hover{
     cursor: pointer;
+    
+}
+
+.bg2{
+    background-image: url('./bg2.png');
+    background-size: cover !important;
+    background-position: center !important;
+    width: 160px !important;
+    height: 100px !important;
+    position: relative;
+    /* background: rgba(255, 255, 255, 0.09); */
+    /* animation: shiny 0.5s linear infinite;
+    animation-delay: 10s; */
+}
+/* .bg2::before{
+    content: '';
+    position: absolute;
+    top: 0;
+    height: 80%;
+	left: -10%;
+	width: 5%;
+	background: none;
+    animation: shiny 2s linear ;
+    
+} */
+.bg1{
+    width: 160px !important;
+    height: 80px !important;
+    position: relative;
+    display: flex;
+    justify-content: center;
+}
+.bg1-container{
+    width: 100%;
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: center;
+  
+}
+.info{
+    color: #3ca1c4;
+}
+/* .frameBox::before{
+    content: '';
+    position: absolute;
+    top: -70px;
+    left: -80px;
+    right: -180px;
+    bottom: -100px;
+    z-index: -1;
+    background-image: url('./bg2.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.frameContainer {
+    border: 10px solid transparent;
+    width: 100%;
+    height: 100%;
+} */
+.project-container::before{
+    content: '';
+    position: absolute;
+    width: 240px;
+    height: 180px;
+    padding: 50px 50px 50px 30px;
+    left: -50px;
+    top:-60px;
+    z-index: -1;
+    background-image: url('./bg2.png');
+    background-size: contain;
+    background-position: center;
+    background-repeat: no-repeat;
+}
+.project-container{
+    width:220px;
+    height:120px;
+    display:flex;
+    /* border:1px solid black; */
+    flex-direction:row;
+    align-items:center;
+    flex-wrap: nowrap;
+    position: relative;
+   
+}
+#select-project{
+    border: 2px solid #3ca1c4;
+}
+.wrapper{
+    width:100%;
+    padding:20px;
+    height: 100px;
+    }
+
+.showSelect{
+    transform: scale(0);
+    animation: 1s show forwards;
+    position: relative;
+}
+.showSelect::before {
+    content: '';
+    position: absolute;
+    top: -15%;
+    left: -10%;
+    width: 120%; /* Cover the entire width of the .showSelect element */
+    height: 120%; /* Cover the entire height of the .showSelect element */
+    background-image: url('./bg3.png');
+    background-size: cover; /* Cover the entire area with the background image */
+    background-position: center;
+    background-repeat: no-repeat;
+    z-index: -1;
+}
+@keyframes show{
+    to{
+        transform: scale(1);
+    }
+}
+@keyframes shiny {
+    to {
+      background:linear-gradient(90deg,transparent, #3ca1c4,transparent);
+      left: 80%;
+    }
+  }
+
+.custom-scrollbar {
+    /* Menentukan ukuran scroll bar */
+    scrollbar-width: thin; /* Untuk browser yang mendukung CSS Scrollbars */
+    scrollbar-color: #3ca1c4 !important; /* Untuk browser yang mendukung CSS Scrollbars */
+    /* Menyesuaikan gaya scroll bar */
+    overflow-y: auto; 
+    
+}
+
+/* Menentukan warna latar belakang dan gaya scroll bar */
+.custom-scrollbar::-webkit-scrollbar {
+    width: 10px;
+}
+
+.custom-scrollbar::-webkit-scrollbar-track {
+    background: lightblue;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb {
+    background:  lightblue;
+}
+
+.custom-scrollbar::-webkit-scrollbar-thumb:hover {
+    background: lightblue;
+}
+
+.project-opts{
+    background-color:  transparent;;
+    padding: 2px;
+    margin: 2px 0px !important;
+    border: 1px solid lightblue;
+    border-bottom-left-radius: 8px;
+}
+.project-opts:hover{
+    background-color: lightblue;
+    color: white;
+    padding: 2px;
+    margin: 2px 0px !important;
+    border: 1px solid lightblue;
+    border-bottom-left-radius: 8px;
 }

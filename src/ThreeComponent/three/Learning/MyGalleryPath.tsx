@@ -8,32 +8,10 @@ import {Text, shaderMaterial} from '@react-three/drei'
 import {useFrame, useLoader} from '@react-three/fiber'
 import {useState} from 'react'
 import { Vector3, Object3D } from 'three';
-import { Images } from "./test"
 import { ObjectLoader } from "three"
 import { fadeIn,fadeOut } from "./efect/efect"
-
-type CollisionEvent = { contact: { bi: { name: string }, bj: { name: string } } };
-
-// function moveObject(object: Object3D, targetPosition: Vector3, duration: number): void {
-//     const startPosition = object.position.clone();
-
-//     const startTime = Date.now();
-
-//     function animate(): void {
-//         const timeElapsed = Date.now() - startTime;
-//         const progress = Math.min(timeElapsed / duration, 1); // Progress animasi, maksimal 1
-
-//         // Interpolasi posisi berdasarkan waktu
-//         object.position.lerpVectors(startPosition, targetPosition, progress);
-
-//         if (progress < 1) {
-//             // Jika animasi belum selesai, lanjutkan animasi
-//             requestAnimationFrame(animate);
-//         }
-//     }
-
-//     // Mulai animasi
-//     animate();
+import { Imagess } from "./galeri"
+import { Musik } from "./galeri"
 // }
 const MyGallery = (props:any)=>{
   const [ref] = useBox(()=>(
@@ -44,118 +22,127 @@ const MyGallery = (props:any)=>{
   ),)
 
 
- const [viewBox,] = useBox(()=>({
-   type:'Static',
-   mass:10,
-   position:[props.position[0],-1.49,props.position[2]+4],
-   onCollide:(e)=>{
-      
-         if(e.contact.bi.name ==='user'|| e.contact.bj.name === 'user'){
-          wireframeMaterial.color.set('green')
-      
-         }
-        
-     
-   },
-   onCollideEnd:(e)=>{
-      wireframeMaterial.color.set('white')
-      
-      
-    
-   },
- }))
-  // useFrame(()=>{
 
-  // })
-
-
-  const wireframeMaterial = new THREE.MeshBasicMaterial({
-    color: 0xffffff, // warna kawat
-    wireframe: true // mengaktifkan mode wireframe
-  });
   
-  // Bua t box geometry
-  const boxGeometry = new THREE.BoxGeometry(1, 2, 1);
-  
-  // Buat mesh dengan box geometry dan material wireframe
-  const boxMesh = new THREE.Mesh(boxGeometry, wireframeMaterial);
-  useEffect(() => {
-    if (viewBox.current) {
-      viewBox.current.add(boxMesh);
-    }
-  }, [viewBox]);
 
 
-  const createImagesMesh = async (img: any) => {
-    const textureLoader = new THREE.TextureLoader();
-    const textures = await Promise.all(img.map(async (imgs: any) => {
-        return await textureLoader.load(imgs?.path);
-    }));
+
+  const textureLoader = new THREE.TextureLoader();
  
-    // Menentukan posisi awal
-    img.forEach(async (imgs: any, i: number) => {
-  
-        const materials = [
-            new THREE.MeshBasicMaterial(), // Right
-            new THREE.MeshBasicMaterial(), // Left
-            new THREE.MeshBasicMaterial(), // Top
-            new THREE.MeshBasicMaterial(), // Bottom
-            new THREE.MeshBasicMaterial({ map: textures[i], }), // Front
-            new THREE.MeshBasicMaterial()  // Back
-        ];
-
-        const geo = new THREE.BoxGeometry(1.5, 2, 0.1);
-        const mesh = new THREE.Mesh(geo, materials);
-        
-        // Mengatur posisi gambar
-        if (test.current) {
-            const offsetX = i % 2 === 0 ? test.current.position.x + i + 2 : test.current.position.x - i - 1.5;
-            mesh.position.set(offsetX, 1, -4.5);
-        }
-        
-        if (test3.current) {
-            test3.current.add(mesh);
-            
-        }
-    });
-}
 
 
-
- useEffect(()=>{
-    createImagesMesh(Images)
-    
- },[Images])
 
   const refGallery = ref as MutableRefObject<Mesh>
   const test = useRef<Mesh>(null)
-  const test3 = useRef<THREE.Group>(null)
+ 
 
 
 
 
+ const gallery = useRef<THREE.Group>(null)
+
+ const createGalleryMesh = async()=>{
+  const textures = await Promise.all(Imagess.map(async (imgs: any) => {
+    return textureLoader.load(imgs?.path[0])
+  }));
+  const depthTexture = await Promise.all(Imagess.map(async(imgs:any)=>{
+    return textureLoader.load(imgs?.path[1])
+  }))
+  
+Imagess.forEach(async (imgs: any, i: number) => {
+ 
+
+const customMaterial = new THREE.MeshStandardMaterial({
+    map: textures[i],
+    displacementMap: depthTexture[i],
+    displacementScale: -0.1,
+    displacementBias: -0.01,
+    transparent:true
+});
+
+customMaterial.onBeforeCompile = (shader) => {
+  shader.uniforms.fillColor = { value: new THREE.Color(0xffffff) };
+
+  shader.vertexShader = `
+    varying vec2 vUv;
+    ${shader.vertexShader}
+  `.replace(
+    `#include <uv_vertex>`,
+    `#include <uv_vertex>
+     vUv = uv;`
+  );
+
+  shader.fragmentShader = `
+    uniform sampler2D map;
+    uniform vec3 fillColor;
+    varying vec2 vUv;
+
+    void main() {
+      vec4 color = texture2D(map, vUv);
+      if (color.a < 0.5) {
+        color = vec4(fillColor, 1.0);
+      }
+      gl_FragColor = color;
+    }
+  `;
+};
+
+const materials = [
+    new THREE.MeshStandardMaterial(), // Right
+    new THREE.MeshStandardMaterial(), // Left
+    new THREE.MeshStandardMaterial(), // Top
+    new THREE.MeshStandardMaterial(), // Bottom
+    customMaterial, // Front with custom shader
+    new THREE.MeshStandardMaterial()  // Back
+];
+
+    const geo = new THREE.BoxGeometry(1,2,0.1,200,200,1);
+    const mesh = new THREE.Mesh(geo, materials);
+    
+    // Mengatur posisi gambar
+    if (gallery.current) {
+        const offsetX = i % 2 === 0 ? props.position[0] + i + 2 : props.position[0] - i - 1.5;
+        mesh.position.set(offsetX, 1, -4.5);
+        gallery.current.add(mesh)
+    }
+    
+
+});
+
+ }
 
 
+const musiks = useRef<THREE.Group>(null)
+ const createMusik = async()=>{
+  const textures = await Promise.all(Musik.map(async (imgs: any) => {
+    return textureLoader.load(imgs?.path)
+  }));
+  const material = new THREE.MeshStandardMaterial({map:textures[0],transparent:true,})
+  const geo = new THREE.PlaneGeometry(5,5,120,120)
+  const mesh = new THREE.Mesh(geo,material)
 
+  if(musiks.current){
+    musiks.current.add(mesh)
+  }
+  
+ }
+ useEffect(()=>{
+  createGalleryMesh()
+  createMusik()
+},[Imagess])
   return(
     <group >
       <mesh ref={refGallery} >
-        {/* <TextH text={props?.text || "TEST"} rotationY={props.rotationY}/> */}
         <Text children={"Galeri"}  anchorY="bottom" position={[0, -1, 0]} fontSize={1}
         font="Tomatoes-O8L8.ttf"
         />
       </mesh>
-      <mesh ref={viewBox as MutableRefObject<Mesh>} />
-      <mesh ref={test}  position={[props.position[0],1,props.position[2]+2]}>
-        {/* <boxGeometry args={[1.5,2,0.1]} />
-        <meshBasicMaterial color={'white'}/> */}
-      </mesh>
-    
-     <group ref={test3} position={[props.position[0]+0.2,props.position[1]-3,props.position[2]]}>
-     
-     </group>
-      <group>
-       
+
+      <group ref={gallery} position={[props.position[0]+0.2,props.position[1]-3,props.position[2]+0.1]}>
+        
+      </group>
+      <group ref={musiks} position={[props.position[0]-15,props.position[1],props.position[2]-4.1]}>
+
       </group>
     </group>
   

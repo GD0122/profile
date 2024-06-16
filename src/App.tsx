@@ -6,20 +6,21 @@ import JoyStick from './ThreeComponent/three/JoyStick';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 import { Router } from 'express';
 import ProjectCanvas from './ThreeComponent/three/Learning/ProjectCanvas';
+import TestVr from './ThreeComponent/TestVr';
 
 function App() {
   return (
     <BrowserRouter>
     <Routes>
       <Route path='/' element={
-
-      <div style={{ minHeight: "100vh", minWidth: "100%", position: "relative" }}>
-        <Suspense fallback={<div>Loading...</div>}>
-         <Main/>
-         <JoyStick/>
-        </Suspense>
-    </div>
+        <div style={{ minHeight: "100vh", minWidth: "100%", position: "relative" }}>
+          <Suspense fallback={<div>Loading...</div>}>
+          <Main/>
+          <JoyStick/>
+          </Suspense>
+      </div>
        }/>
+       <Route path='/test' element={<TestVr/>}/>
        <Route path='/project/:ids' element={<ProjectCanvas/>}/>
        <Route path='/*' element={
         <div>
